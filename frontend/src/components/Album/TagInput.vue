@@ -2,13 +2,11 @@
   <div class="tag-input-container">
     <label v-if="label">{{ label }}</label>
     <div class="tags-display">
-      <!-- 已选标签展示 -->
       <span v-for="(tag, index) in modelValue" :key="index" class="tag">
         {{ tag }}
         <span class="tag-remove" @click.stop="removeTag(index)">&times;</span>
       </span>
 
-      <!-- 动态伸缩的输入容器 -->
       <div 
         class="input-container" 
         :class="{ expanded: isExpanded }"
