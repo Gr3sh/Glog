@@ -33,7 +33,6 @@
       </div>
     </div>
 
-    <!-- 标签建议 -->
     <div 
       v-if="showSuggestions && filteredSuggestions.length" 
       class="tag-suggestions"
@@ -51,18 +50,12 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, computed, nextTick} from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
-  label: {
-    type: String,
-    default: '标签'
-  }
+  modelValue: {type: Array, default: () => []},
+  label: {type: String, default: '标签'}
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -78,18 +71,13 @@ async function fetchTags() {
   try {
     const res = await axios.get('http://localhost:8080/tags') 
     suggestionTags.value = res.data
-      .sort((a, b) => b.usageCount - a.usageCount) // 使用次数降序
+      .sort((a, b) => b.usageCount - a.usageCount) 
       .map(item => item.tagName)
   } catch (err) {
     console.error('获取标签失败', err)
   }
 }
 
-onMounted(() => {
-  fetchTags()
-})
-
-// 过滤建议
 const filteredSuggestions = computed(() => {
   return suggestionTags.value
     .filter(tag => !props.modelValue.includes(tag))
@@ -99,6 +87,7 @@ const filteredSuggestions = computed(() => {
 
 // 展开输入框
 const expandInput = async () => {
+  await fetchTags()
   isExpanded.value = true
   showSuggestions.value = true
   await nextTick()
@@ -107,19 +96,23 @@ const expandInput = async () => {
 
 // 收缩输入框
 const shrinkInput = () => {
-  if (!inputValue.value) {
-    isExpanded.value = false
-    showSuggestions.value = false
-    inputWidth.value = '32px'
+  const tag = inputValue.value.trim() 
+  if (tag && !props.modelValue.includes(tag)) {
+    emit('update:modelValue', [...props.modelValue, tag])
   }
+
+  inputValue.value = ''
+  isExpanded.value = false
+  showSuggestions.value = false
+  inputWidth.value = '32px'
 }
 
 // 动态调整输入框宽度
 const handleInputChange = (e) => {
   if (e.target.value.length > 10) {
-    e.target.value = e.target.value.slice(0, 20) // 限制最大长度 20
+    e.target.value = e.target.value.slice(0, 20) 
   }
-  const minWidth = 32 // 和展开按钮一样
+  const minWidth = 32 
   const padding = 12
   const text = e.target.value || ''
   const fakeSpan = document.createElement('span')
@@ -134,7 +127,6 @@ const handleInputChange = (e) => {
   inputWidth.value = `${width}px`
 }
 
-// 添加标签
 const addTag = () => {
   const tag = inputValue.value.trim()
   if (tag && !props.modelValue.includes(tag)) {
@@ -144,14 +136,12 @@ const addTag = () => {
   }
 }
 
-// 移除标签
 const removeTag = (index) => {
   const newTags = [...props.modelValue]
   newTags.splice(index, 1)
   emit('update:modelValue', newTags)
 }
 
-// 选择建议
 const selectSuggestion = (suggestion) => {
   if (!props.modelValue.includes(suggestion)) {
     emit('update:modelValue', [...props.modelValue, suggestion])
@@ -159,11 +149,6 @@ const selectSuggestion = (suggestion) => {
   inputValue.value = ''
   shrinkInput()
 }
-
-// 暴露刷新方法给父组件
-defineExpose({
-  fetchTags
-})
 </script>
 
 <style scoped>
@@ -211,12 +196,13 @@ label {
 }
 
 .input-container input {
-  transition: width 0.4s ease;
   width: 100%;
-  height: 100%;
+  height: 32px;
+  border: 1px solid #ddd;
   border-radius: 16px;
   padding: 0 12px;
-  border: 1px solid #ddd;
+  outline: none;
+  transition: width 0.4s ease;
 }
 
 .add-button {
@@ -240,15 +226,6 @@ label {
 .plus-icon {
   font-size: 18px;
   color: #666;
-}
-
-.tag-input {
-  width: 100%;
-  height: 32px;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  padding: 0 12px;
-  outline: none;
 }
 
 .tag-suggestions {

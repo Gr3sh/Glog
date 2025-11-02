@@ -47,11 +47,9 @@ export default {
     const selectedDate = ref('')
     const uploadUrl = ref('http://localhost:8080/photos/upload')
     const photoDisplayRef = ref(null)
-    const tagsInputRef = ref(null)
     // 上传成功后的回调
     const onUploaded = (responseData) => {
       photoDisplayRef.value?.fetchPhotos()
-      tagsInputRef.value?.fetchTags()
     }
 
     return {
@@ -60,7 +58,6 @@ export default {
       selectedDate,
       uploadUrl,
       photoDisplayRef,
-      tagsInputRef,
       onUploaded
     }
   }

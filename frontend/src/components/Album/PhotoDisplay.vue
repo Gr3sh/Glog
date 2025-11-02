@@ -23,20 +23,17 @@ async function fetchPhotos() {
     const res = await axios.get('http://localhost:8080/photos/list')
     photos.value = res.data.map(photo => ({
       ...photo,
-      storagePath: `http://localhost:8080/uploads/${photo.originalName}`
+      storagePath: `http://localhost:8080/uploads/${encodeURIComponent(photo.originalName)}`
     }))
   } catch (err) {
     console.error('获取照片失败:', err)
   }
 }
 
-// 页面挂载时先拉一次数据
 fetchPhotos()
 
-// 删除照片
 async function deletePhoto(photoId) {
   try {
-    console.log(photoId)
     await axios.delete(`http://localhost:8080/photos/delete/${photoId}`)
     alert('删除成功')
     fetchPhotos() // 刷新列表
@@ -54,7 +51,6 @@ const groupedPhotos = computed(() => {
     if (!groups[date]) groups[date] = []
     groups[date].push(photo)
   })
-  // 按日期降序排序
   return Object.entries(groups).sort((a, b) => new Date(b[0]) - new Date(a[0]))
 })
 
