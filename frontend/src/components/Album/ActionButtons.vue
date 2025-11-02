@@ -1,17 +1,9 @@
 <template>
   <div class="action-buttons">
-    <button 
-      class="cancel-btn" 
-      :disabled="disabled"
-      @click="handleCancel"
-    >
+    <button class="cancel-btn" :disabled="disabled" @click="handleCancel"> 
       {{ cancelText }}
     </button>
-    <button 
-      class="confirm-btn" 
-      :disabled="isConfirmDisabled"
-      @click="handleConfirm"
-    >
+    <button class="confirm-btn" :disabled="isConfirmDisabled" @click="handleConfirm">
       {{ confirmText }}
     </button>
   </div>

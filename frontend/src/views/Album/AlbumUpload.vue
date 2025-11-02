@@ -1,29 +1,13 @@
 <template>
   <div class="album-container">
-    <!-- 上传文件 -->
-    <UploadButton
-      v-model="pendingFiles"
-      accept="image/*"
-      button-text="选择照片" 
-    />
-    <!-- 上传预览 -->
-    <PendingPhoto
-      v-model:files="pendingFiles"
-    />
-    <!-- 标签选择 -->
-    <TagInput
-      ref="tagsInputRef"
-      v-show="pendingFiles.length > 0"
-      v-model="selectedTags"
+    <UploadButton v-model="pendingFiles" accept="image/*" button-text="选择照片" />
+    <TagInput 
+      ref="tagsInputRef" 
+      v-show="pendingFiles.length > 0" 
+      v-model="selectedTags" 
       label="标签"
     />
-    <!-- 日期选择 -->
-    <DatePicker
-      v-show="pendingFiles.length > 0"
-      v-model="selectedDate"
-      label="日期"
-    />
-    <!-- 上传和取消操作按钮 -->
+    <DatePicker v-show="pendingFiles.length > 0" v-model="selectedDate" label="日期"/> 
     <ActionButtons
       v-show="pendingFiles.length > 0"
       v-model:pendingFiles="pendingFiles"
@@ -43,8 +27,7 @@
 import { ref } from 'vue'
 import axios from 'axios';
 
-import UploadButton from '@/components/UploadButton.vue'
-import PendingPhoto from '@/components/Album/PendingPhoto.vue';
+import UploadButton from '@/components/Album/UploadButton.vue';
 import TagInput from '@/components/Album/TagInput.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import ActionButtons from '@/components/Album/ActionButtons.vue';
@@ -53,7 +36,6 @@ import PhotoDisplay from '@/components/Album/PhotoDisplay.vue';
 export default {
   components: {
     UploadButton,
-    PendingPhoto,
     TagInput,
     DatePicker,
     ActionButtons,
