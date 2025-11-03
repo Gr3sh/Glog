@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Set;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.io.File;
 
@@ -83,18 +84,22 @@ public class AlbumPhotoService {
             throw new Exception("照片不存在");
         }
 
-        // 删除本地文件
+        if (photo.getTags() != null && !photo.getTags().isEmpty()) {
+            Set<AlbumTags> tags = new HashSet<>(photo.getTags()); // 避免并发修改
+            // 双向解绑多对多关系
+            for (AlbumTags tag : tags) {
+                photo.getTags().remove(tag);
+                tag.getPhotos().remove(photo);
+            }
+            // 更新标签使用次数
+            albumTagsService.decreaseUsage(tags);
+        }
+
+       albumPhotoRepository.delete(photo);
+
         File file = new File(photo.getStoragePath());
         if (file.exists() && !file.delete()) {
             throw new Exception("文件删除失败: " + photo.getStoragePath());
         }
-        
-        // 处理标签：照片关联的每个标签引用数减1，如果为0就删除标签
-        if (photo.getTags() != null && !photo.getTags().isEmpty()) {
-            albumTagsService.decreaseUsage(photo.getTags());
-        }
-
-        // 删除数据库记录
-        albumPhotoRepository.deleteById(photoId);
     }
 }

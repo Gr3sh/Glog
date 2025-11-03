@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 对应 AlbumTags 表 - 标签实体类
  */
@@ -31,6 +33,7 @@ public class AlbumTags {
     private Integer usageCount = 0;
 
     @ManyToMany(mappedBy = "tags", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<AlbumPhoto> photos = new HashSet<>();
 
 
@@ -73,6 +76,10 @@ public class AlbumTags {
         this.usageCount = usageCount;
     }
     
+    public Set<AlbumPhoto> getPhotos() {
+        return photos;
+    }
+
     public void decrementCount() {
         this.usageCount--;
     }

@@ -57,7 +57,7 @@ public class AlbumTagsService {
     }
 
     /**
-     * 标签使用次数减少（可选，用于删除照片时）
+     * 标签使用次数减少
      */
     public void decreaseUsage(Set<AlbumTags> tags) {
         for (AlbumTags tag : tags) {

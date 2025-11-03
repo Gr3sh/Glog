@@ -21,6 +21,7 @@ const photos = ref([])
 async function fetchPhotos() {
   try {
     const res = await axios.get('http://localhost:8080/photos/list')
+    console.log('Fetched photos:', res.data)
     photos.value = res.data.map(photo => ({
       ...photo,
       storagePath: `http://localhost:8080/uploads/${encodeURIComponent(photo.originalName)}`
@@ -34,9 +35,10 @@ fetchPhotos()
 
 async function deletePhoto(photoId) {
   try {
+   console.log('Deleting photo with ID:', photoId)
     await axios.delete(`http://localhost:8080/photos/delete/${photoId}`)
     alert('删除成功')
-    fetchPhotos() // 刷新列表
+    fetchPhotos() 
   } catch (err) {
     console.error('删除失败:', err)
     alert('删除失败，请重试')

@@ -42,7 +42,7 @@ public class AlbumPhotoController {
 
         // 保存图片
         List<AlbumPhoto> savedPhotos = new ArrayList<>();
-        String uploadDir = "E:/Work/blog/database/uploads/";
+        String uploadDir = "E:/Work/Glog/database/uploads/";
         File dir = new File(uploadDir);
         if (!dir.exists()) dir.mkdirs();
 
@@ -72,15 +72,7 @@ public class AlbumPhotoController {
     @DeleteMapping("/delete/{photoId}")
     public String deletePhoto(@PathVariable Integer photoId) {
         try {
-            // 先从数据库删除记录，并获取文件路径
-            AlbumPhoto photo = albumPhotoService.getPhotoById(photoId);
-            if (photo == null) {
-                return "照片不存在";
-            }
-
-            // 删除数据库记录
             albumPhotoService.deletePhoto(photoId);
-
             return "删除成功";
         } catch (Exception e) {
             e.printStackTrace();

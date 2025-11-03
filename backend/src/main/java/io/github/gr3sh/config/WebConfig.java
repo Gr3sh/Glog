@@ -12,6 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         // 将本地上传目录映射到 /uploads/**
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:E:/Work/blog/database/uploads/");
+                .addResourceLocations("file:E:/Work/Glog/database/uploads/");
     }
 }
