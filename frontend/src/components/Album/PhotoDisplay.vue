@@ -4,10 +4,13 @@
       <h3 class="photo-date">{{ date }}</h3>
       <div class="photo-row">
         <div v-for="photo in dayPhotos" :key="photo.photoId" class="photo-item">
-          <img :src="photo.storagePath" :alt="photo.originalName" />
+          <img :src="photo.storagePath" :alt="photo.originalName" @click="showLarge(photo)"/>
           <button class="delete-btn" @click="deletePhoto(photo.photoId)">×</button>
         </div>
       </div>
+    </div>
+    <div v-if="largePhoto" class="photo-modal" @click="largePhoto = null">
+      <img :src="largePhoto.storagePath" :alt="largePhoto.originalName" />
     </div>
   </div>
 </template>
@@ -17,6 +20,7 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 
 const photos = ref([])
+const largePhoto = ref(null)
 
 async function fetchPhotos() {
   try {
@@ -55,6 +59,10 @@ const groupedPhotos = computed(() => {
   })
   return Object.entries(groups).sort((a, b) => new Date(b[0]) - new Date(a[0]))
 })
+
+function showLarge(photo) {
+  largePhoto.value = photo
+}
 
 // 暴露刷新方法给父组件
 defineExpose({
@@ -124,5 +132,25 @@ defineExpose({
 
 .photo-item:hover .delete-btn {
   opacity: 1;
+}
+
+/* 大图弹窗样式 */
+.photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.photo-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
 }
 </style>
